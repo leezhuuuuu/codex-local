@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+
+script_dir=$(CDPATH='' cd -- "$(dirname -- "$0")" && pwd)
+entry=cli.mjs
+if [ "${1:-}" = '--host' ]; then
+  entry=host.mjs
+  shift
+fi
+for node_bin in "$(command -v node || true)" '/Applications/ChatGPT.app/Contents/Resources/node'; do
+  if [ -n "$node_bin" ] && [ -x "$node_bin" ] && "$node_bin" -e 'process.exit(Number(process.versions.node.split(".")[0]) < 20 ? 1 : 0)' >/dev/null 2>&1; then
+    exec "$node_bin" "$script_dir/$entry" "$@"
+  fi
+done
+printf '%s\n' '{"error":{"code":"NODE_UNAVAILABLE","message":"Codex Local needs Node.js 20 or later."}}' >&2
+exit 1

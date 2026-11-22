@@ -1,0 +1,7 @@
+{
+  "display_name": "Codex Local CLI Host",
+  "description": "Processes local CLI requests through the Codex App Server.",
+  "command": "/bin/sh",
+  "args": ["../../skills/codex-local/scripts/codex-local", "--host"],
+  "restart_policy": "on-failure"
+}
